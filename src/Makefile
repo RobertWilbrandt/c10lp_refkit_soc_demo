@@ -37,7 +37,7 @@ $(BUILD_APP_DIR)/application.elf: $(BUILD_APP_DIR)/linker.ld $(OBJECTS)
 		-lbase-nofloat -lcompiler_rt
 
 $(BUILD_APP_DIR)/linker.ld: $(CURDIR)/linker.ld $(BUILD_APP_DIR)
-	if [ ! -e $< ]; then  $(LN) -s $< $@; fi;
+	if [ ! -e $@ ]; then  $(LN) -s $< $@; fi;
 
 $(BUILD_APP_DIR)/%.o: %.c $(BUILD_APP_DIR) # Compilation depends on gateware-generated files
 	$(compile)
