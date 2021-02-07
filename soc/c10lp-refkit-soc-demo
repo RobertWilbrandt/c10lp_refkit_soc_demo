@@ -5,12 +5,25 @@
 import argparse
 import os
 
+from litex.soc.cores.gpio import GPIOIn, GPIOOut
 from litex.soc.integration.builder import (Builder, builder_argdict,
                                            builder_args)
 from litex.soc.integration.soc_sdram import soc_sdram_argdict, soc_sdram_args
 from litex_boards.targets.c10lprefkit import BaseSoC
 
 SYS_CLK_FREQ = 50 * 10 ** 6
+
+
+class DemoSoC(BaseSoC):
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.submodules.gpio_leds = GPIOOut(self.platform.request("gpio_leds"))
+        self.add_csr("gpio_leds")
+
+        self.submodules.switches = GPIOIn(self.platform.request_all("sw"))
+        self.add_csr("switches")
 
 
 def parse_args():
@@ -31,7 +44,7 @@ def main():
     """Entry point"""
     args = parse_args()
 
-    soc = BaseSoC(sys_clk_freq=SYS_CLK_FREQ, **soc_sdram_argdict(args))
+    soc = DemoSoC(sys_clk_freq=SYS_CLK_FREQ, **soc_sdram_argdict(args))
     builder = Builder(soc, **builder_argdict(args))
 
     builder.build(run=args.build)

@@ -36,11 +36,18 @@ int main(void) {
   init();
 
   while (1) {
-    for (size_t i = 0; i < 4; ++i) {
-      leds_out_write(1 << i);
-      printf("LED %d\n", i);
+    for (int i = 0; i < 7; ++i) {
+      int switches = switches_in_read();
+      for (int j = 0; j < 5; ++j) {
+        int sw = (switches & (1 << j)) >> j;
+        printf("%d", sw);
+      }
+      printf("\n");
 
-      busy_wait(1000);
+      leds_out_write(~switches);
+      gpio_leds_out_write(1 << i);
+
+      busy_wait(100);
     }
   }
 
