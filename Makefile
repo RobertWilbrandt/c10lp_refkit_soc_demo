@@ -33,7 +33,7 @@ $(BUILD_APP_DIR)/generated: $(BUILD_SOC_DIR)/software/include/generated
 $(BUILD_DIR)/gateware.sof: $(BUILD_SOC_DIR)/gateware/c10lprefkit.sof
 	$(CP) -f $< $@
 
-$(BUILD_SOC_DIR)/%: soc/c10lp-refkit-soc-demo
+$(BUILD_SOC_DIR)/%.sof: soc/c10lp-refkit-soc-demo
 	python3 $< --build
 
 # Build application with recursive make
