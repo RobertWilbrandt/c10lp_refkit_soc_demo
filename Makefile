@@ -38,7 +38,7 @@ $(BUILD_SOC_DIR)/%: soc/c10lp-refkit-soc-demo
 
 # Build application with recursive make
 $(BUILD_DIR)/%.bin: $(BUILD_APP_DIR)/%.bin
-	$(CP) -n $< $@
+	$(CP) -f $< $@
 
 $(BUILD_APP_DIR)/application.bin: $(BUILD_APP_DIR)/generated
 	BUILD_DIR=$(BUILD_DIR) BUILD_SOC_DIR=$(BUILD_SOC_DIR) $(MAKE) -C src application
