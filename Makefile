@@ -21,6 +21,9 @@ load: soc/c10lp-refkit-soc-demo $(BUILD_DIR)/gateware.sof  # Load gateware to FP
 load-flash: $(BUILD_DIR)/indirect_flash.jic                 # Load gateware to FPGA flash
 	quartus_pgm -m JTAG -c Arrow-USB-Blaster -i -o "ipv;$<"
 
+run: $(BUILD_DIR)/application.bin                           # Flash gateware and application
+	flterm --port $(PORT) --kernel $<
+
 
 # Cleaning rules
 clean: clean-application clean-gateware
