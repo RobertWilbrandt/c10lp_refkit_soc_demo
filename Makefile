@@ -2,6 +2,8 @@
 include build/c10lprefkit/software/include/generated/variables.mak
 include $(SOC_DIRECTORY)/software/common.mak
 
+RM?=rm -f
+
 OBJECTS=build/application/main.o
 BUILD_DIR=build
 BUILD_SOC_DIR=$(BUILD_DIR)/c10lprefkit
@@ -11,6 +13,15 @@ BUILD_APP_DIR=$(BUILD_DIR)/application
 all: gateware application
 application: $(BUILD_APP_DIR)/application.bin
 gateware: $(BUILD_SOC_DIR)/gateware/c10lprefkit.sof
+
+# Cleaning rules
+clean:
+	$(RM) -r $(BUILD_DIR)
+clean-application:
+	$(RM) -r $(BUILD_APP_DIR)
+clean-gateware:
+	$(RM) -r $(BUILD_SOC_DIR)
+
 
 # Use litex script to build gateware (including bios)
 *.sof: soc/c10lp-refkit-soc-demo
@@ -37,4 +48,4 @@ build/application/%.o: src/%.c $(BUILD_APP_DIR)
 $(BUILD_APP_DIR):
 	mkdir -p $@
 
-.PHONY: all application gateware $(BUILD_APP_DIR)
+.PHONY: all clean application clean_application gateware clean_gateware
