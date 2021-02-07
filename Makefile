@@ -18,6 +18,10 @@ gateware: $(BUILD_DIR)/gateware.sof                        # Build gateware
 load: soc/c10lp-refkit-soc-demo $(BUILD_DIR)/gateware.sof  # Load gateware to FPGA
 	python3 $< --load
 
+load-flash: $(BUILD_DIR)/indirect_flash.jic                 # Load gateware to FPGA flash
+	quartus_pgm -m JTAG -c Arrow-USB-Blaster -i -o "ipv;$<"
+
+
 # Cleaning rules
 clean: clean-application clean-gateware
 	$(RM) -r $(BUILD_DIR)
@@ -47,6 +51,10 @@ $(BUILD_DIR)/%.bin: $(BUILD_APP_DIR)/%.bin
 
 $(BUILD_APP_DIR)/application.bin: $(BUILD_APP_DIR)/generated
 	BUILD_DIR=$(BUILD_DIR) BUILD_SOC_DIR=$(BUILD_SOC_DIR) $(MAKE) -C src application
+
+# Use quartus_pgm to build flashing configuration files
+$(BUILD_DIR)/indirect_flash.jic: $(BUILD_DIR)/gateware.sof
+	quartus_cpf -c -d EPCQ16A -s 10CL055Y $< $@
 
 .PHONY: all clean application clean_application gateware load clean_gateware $(BUILD_APP_DIR)/application.bin
 .SECONDARY: $(BUILD_SOC_DIR)/gateware/%.sof
