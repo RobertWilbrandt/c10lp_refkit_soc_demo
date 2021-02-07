@@ -16,16 +16,18 @@ gateware: $(BUILD_DIR)/gateware.sof
 # Cleaning rules
 clean: clean-application clean-gateware
 	$(RM) -r $(BUILD_DIR)
+
 clean-application:
 	BUILD_DIR=$(BUILD_DIR) BUILD_SOC_DIR=$(BUILD_SOC_DIR) $(MAKE) -C src clean
 	$(RM) $(BUILD_DIR)/application.bin
+
 clean-gateware:
 	$(RM) -r $(BUILD_SOC_DIR)
 	$(RM) $(BUILD_DIR)/gateware.sof
 
 # Link generated headers, linker scripts and makefile segments for use in application
 $(BUILD_APP_DIR)/generated: $(BUILD_SOC_DIR)/software/include/generated
-	$(LN) -s $< $@
+	if [ ! -e $< ]; then  $(LN) -s $< $@; fi;
 
 # Use litex script to build gateware (including bios)
 $(BUILD_DIR)/gateware.sof: $(BUILD_SOC_DIR)/gateware/c10lprefkit.sof
@@ -39,7 +41,7 @@ $(BUILD_DIR)/%.bin: $(BUILD_APP_DIR)/%.bin
 	$(CP) -n $< $@
 
 $(BUILD_APP_DIR)/application.bin:
-	BUILD_DIR=$(BUILD_DIR) BUILD_SOC_DIR=$(BUILD_SOC_DIR) $(MAKE) -C src
+	BUILD_DIR=$(BUILD_DIR) BUILD_SOC_DIR=$(BUILD_SOC_DIR) $(MAKE) -C src application
 
 .PHONY: all clean application clean_application gateware clean_gateware $(BUILD_APP_DIR)/application.bin
 .PRECIOUS: $(BUILD_SOC_DIR)/gateware/%.sof

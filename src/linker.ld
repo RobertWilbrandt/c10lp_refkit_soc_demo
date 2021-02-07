@@ -4,12 +4,12 @@
  * (https://github.com/enjoy-digital/litex). For more information, see the
  * 3rd-party-licenses.txt file.
  */
-INCLUDE ../build/c10lprefkit/software/include/generated/output_format.ld
+INCLUDE generated/output_format.ld
 ENTRY(_start)
 
 __DYNAMIC = 0;
 
-INCLUDE ../build/c10lprefkit/software/include/generated/regions.ld
+INCLUDE generated/regions.ld
 
 SECTIONS
 {
