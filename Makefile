@@ -10,8 +10,13 @@ BUILD_APP_DIR=$(BUILD_DIR)/application
 
 # Setup usable rules
 all: gateware application
-application: $(BUILD_DIR)/application.bin
-gateware: $(BUILD_DIR)/gateware.sof
+
+application: $(BUILD_DIR)/application.bin                  # Build application
+
+gateware: $(BUILD_DIR)/gateware.sof                        # Build gateware
+
+load: soc/c10lp-refkit-soc-demo $(BUILD_DIR)/gateware.sof  # Load gateware to FPGA
+	python3 $< --load
 
 # Cleaning rules
 clean: clean-application clean-gateware
@@ -43,5 +48,5 @@ $(BUILD_DIR)/%.bin: $(BUILD_APP_DIR)/%.bin
 $(BUILD_APP_DIR)/application.bin: $(BUILD_APP_DIR)/generated
 	BUILD_DIR=$(BUILD_DIR) BUILD_SOC_DIR=$(BUILD_SOC_DIR) $(MAKE) -C src application
 
-.PHONY: all clean application clean_application gateware clean_gateware $(BUILD_APP_DIR)/application.bin
+.PHONY: all clean application clean_application gateware load clean_gateware $(BUILD_APP_DIR)/application.bin
 .SECONDARY: $(BUILD_SOC_DIR)/gateware/%.sof
