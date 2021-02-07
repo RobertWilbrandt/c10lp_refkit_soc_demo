@@ -31,7 +31,7 @@ $(BUILD_APP_DIR)/generated: $(BUILD_SOC_DIR)/software/include/generated
 
 # Use litex script to build gateware (including bios)
 $(BUILD_DIR)/gateware.sof: $(BUILD_SOC_DIR)/gateware/c10lprefkit.sof
-	$(CP) -n $< $@
+	$(CP) -f $< $@
 
 $(BUILD_SOC_DIR)/%: soc/c10lp-refkit-soc-demo
 	python3 $< --build
@@ -44,4 +44,4 @@ $(BUILD_APP_DIR)/application.bin: $(BUILD_APP_DIR)/generated
 	BUILD_DIR=$(BUILD_DIR) BUILD_SOC_DIR=$(BUILD_SOC_DIR) $(MAKE) -C src application
 
 .PHONY: all clean application clean_application gateware clean_gateware $(BUILD_APP_DIR)/application.bin
-.PRECIOUS: $(BUILD_SOC_DIR)/gateware/%.sof
+.SECONDARY: $(BUILD_SOC_DIR)/gateware/%.sof
