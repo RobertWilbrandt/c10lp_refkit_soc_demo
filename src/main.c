@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <uart.h>
 
+#define SWITCH_MASK ((1 << 5) - 1)
+
 // This program doesn't do too much when there are no LEDs
 #ifndef CSR_LEDS_BASE
 #error "SoC does not contain any LEDs"
@@ -35,16 +37,28 @@ void isr(void) {
 int main(void) {
   init();
 
+  int led_state = 0;  // All leds off initially
+
+  int last_switches = 0;
   while (1) {
     for (int i = 0; i < 7; ++i) {
-      int switches = switches_in_read();
-      for (int j = 0; j < 5; ++j) {
-        int sw = (switches & (1 << j)) >> j;
-        printf("%d", sw);
-      }
-      printf("\n");
+      int switches = (~switches_in_read()) & SWITCH_MASK;
 
-      leds_out_write(~switches);
+      int diff = last_switches ^ switches;
+      int pressed = diff & switches;
+
+      last_switches = switches;
+
+      // A button was pressed
+      if (pressed & ((1 << 5) - 1)) {
+        printf("button press: %d\n", pressed);
+      }
+
+      // Update LEDs
+      led_state ^= pressed;
+      leds_out_write(led_state);
+
+      // Small chaser on GPIO LEDs
       gpio_leds_out_write(1 << i);
 
       busy_wait(100);
