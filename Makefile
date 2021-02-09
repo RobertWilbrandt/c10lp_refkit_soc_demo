@@ -7,6 +7,7 @@ CP?=cp
 BUILD_DIR=$(CURDIR)/build
 BUILD_SOC_DIR=$(BUILD_DIR)/c10lprefkit
 BUILD_APP_DIR=$(BUILD_DIR)/application
+SOC_DIR=$(CURDIR)/soc
 
 # Setup usable rules
 all: gateware application
@@ -45,8 +46,8 @@ $(BUILD_APP_DIR)/generated: $(BUILD_SOC_DIR)/software/include/generated
 $(BUILD_DIR)/gateware.sof: $(BUILD_SOC_DIR)/gateware/c10lprefkit.sof
 	$(CP) -f $< $@
 
-$(BUILD_SOC_DIR)/%.sof: soc/c10lp-refkit-soc-demo
-	python3 $< --build
+$(BUILD_SOC_DIR)/%.sof: $(SOC_DIR)/demo_soc_builder.py $(SOC_DIR)/demo_soc.py
+	python3 -m soc.demo_soc_builder --build
 
 # Build application with recursive make
 $(BUILD_DIR)/%.bin: $(BUILD_APP_DIR)/%.bin

@@ -1,29 +1,15 @@
-#!/usr/bin/env python3
-"""SoC component of the Cyclone 10 LP RefKit SoC demo"""
-# pylint: disable=invalid-name
+"""Build demo SoC gateware"""
 
 import argparse
 import os
 
-from litex.soc.cores.gpio import GPIOIn, GPIOOut
 from litex.soc.integration.builder import (Builder, builder_argdict,
                                            builder_args)
 from litex.soc.integration.soc_sdram import soc_sdram_argdict, soc_sdram_args
-from litex_boards.targets.c10lprefkit import BaseSoC
+
+from .demo_soc import DemoSoC
 
 SYS_CLK_FREQ = 50 * 10 ** 6
-
-
-class DemoSoC(BaseSoC):
-    def __init__(self, *args, **kwargs):
-
-        super().__init__(*args, **kwargs)
-
-        self.submodules.gpio_leds = GPIOOut(self.platform.request("gpio_leds"))
-        self.add_csr("gpio_leds")
-
-        self.submodules.switches = GPIOIn(self.platform.request_all("sw"))
-        self.add_csr("switches")
 
 
 def parse_args():
