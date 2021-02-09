@@ -41,7 +41,7 @@ int main(void) {
 
   int last_switches = 0;
   while (1) {
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < 8; ++i) {
       int switches = (~switches_in_read()) & SWITCH_MASK;
 
       int diff = last_switches ^ switches;
