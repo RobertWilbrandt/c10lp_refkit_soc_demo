@@ -15,8 +15,8 @@ application: $(BUILD_DIR)/application.bin                  # Build application
 
 gateware: $(BUILD_DIR)/gateware.sof                        # Build gateware
 
-load: soc/c10lp-refkit-soc-demo $(BUILD_DIR)/gateware.sof  # Load gateware to FPGA
-	python3 $< --load
+load: $(BUILD_DIR)/gateware.sof                            # Load gateware to FPGA
+	quartus_pgm -m JTAG -c Arrow-USB-Blaster -o "p;$<"
 
 load-flash: $(BUILD_DIR)/indirect_flash.jic                 # Load gateware to FPGA flash
 	quartus_pgm -m JTAG -c Arrow-USB-Blaster -i -o "ipv;$<"
