@@ -9,6 +9,8 @@ BUILD_SOC_DIR=$(BUILD_DIR)/c10lprefkit
 BUILD_APP_DIR=$(BUILD_DIR)/application
 SOC_DIR=$(CURDIR)/soc
 
+SOC_FILES=$(SOC_DIR)/demo_soc_builder.py $(SOC_DIR)/demo_soc.py $(SOC_DIR)/segment_display.py
+
 # Setup usable rules
 all: gateware application
 
@@ -46,7 +48,7 @@ $(BUILD_APP_DIR)/generated: $(BUILD_SOC_DIR)/software/include/generated
 $(BUILD_DIR)/gateware.sof: $(BUILD_SOC_DIR)/gateware/c10lprefkit.sof
 	$(CP) -f $< $@
 
-$(BUILD_SOC_DIR)/%.sof: $(SOC_DIR)/demo_soc_builder.py $(SOC_DIR)/demo_soc.py
+$(BUILD_SOC_DIR)/%.sof: $(SOC_FILES)
 	python3 -m soc.demo_soc_builder --build
 
 # Build application with recursive make

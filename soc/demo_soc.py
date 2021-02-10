@@ -3,6 +3,8 @@ from litex.build.generic_platform import IOStandard, Pins
 from litex.soc.cores.gpio import GPIOIn, GPIOOut
 from litex_boards.targets.c10lprefkit import BaseSoC
 
+from .segment_display import SegmentDisplay
+
 segment_ios = [
     (
         "segments_c",
@@ -15,17 +17,19 @@ segment_ios = [
 
 
 class DemoSoC(BaseSoC):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, sys_clk_freq, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
 
         self.platform.add_extension(segment_ios)
 
-        segments_an = self.platform.request("segments_an")
-        segments_c = self.platform.request("segments_c")
-
-        self.sync += segments_an.eq(False)
-        self.sync += segments_c.eq(False)
+        self.submodules.segment_display = SegmentDisplay(
+            self.platform.request("segments_an"),
+            self.platform.request("segments_c"),
+            sys_clk_freq=sys_clk_freq,
+            rate=1000,
+        )
+        self.add_csr("segment_display")
 
         self.submodules.gpio_leds = GPIOOut(self.platform.request("gpio_leds"))
         self.add_csr("gpio_leds")
