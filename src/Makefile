@@ -5,9 +5,9 @@
 
 LN?=ln
 
-# Include gateware-generated make file segments
-include $(BUILD_DIR)/c10lprefkit/software/include/generated/variables.mak
-include $(SOC_DIRECTORY)/software/common.mak
+# Include gateware-generated make file segments (- as we could not have these e.g. when cleaning)
+-include $(BUILD_DIR)/c10lprefkit/software/include/generated/variables.mak
+-include $(SOC_DIRECTORY)/software/common.mak
 
 BUILD_APP_DIR=$(BUILD_DIR)/application
 
